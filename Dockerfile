@@ -1,5 +1,5 @@
 # Build stage
-FROM oven/bun:1.2 as builder
+FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408 as builder
 WORKDIR /app
 
 # Copy package files
@@ -12,7 +12,7 @@ RUN bun install --frozen-lockfile
 COPY src /app/src
 
 # Runtime stage
-FROM oven/bun:1.2
+FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408
 WORKDIR /app
 
 # Copy built application
