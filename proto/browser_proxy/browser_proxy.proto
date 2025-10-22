@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package browser_proxy.v1;
+
+// Browser Proxy Service
+// Manages browser sessions using Playwright and executes
+// HTTP communications and file downloads
+service BrowserProxyService {
+  // Creates a browser session with cookies and headers configuration
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+
+  // Executes an HTTP GET request to fetch JSON or text
+  rpc FetchHttp(FetchHttpRequest) returns (FetchHttpResponse);
+
+  // Downloads binary files with streaming support
+  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileResponse);
+
+  // Closes and destroys a session
+  rpc CloseSession(CloseSessionRequest) returns (CloseSessionResponse);
+}
+
+// Request to create a new session
+message CreateSessionRequest {
+  map<string, string> cookies = 1; // Authentication cookies (e.g., FANBOXSESSID)
+  map<string, string> default_headers = 2; // Common headers (e.g., User-Agent)
+}
+
+// Response for session creation
+message CreateSessionResponse {
+  string session_id = 1; // Session identifier
+}
+
+// Request to fetch HTTP content
+message FetchHttpRequest {
+  string session_id = 1;
+  string url = 2;
+  map<string, string> headers = 3; // Additional headers for this request
+}
+
+// Response containing HTTP fetch result
+message FetchHttpResponse {
+  int32 status_code = 1;
+  map<string, string> headers = 2;
+  bytes body = 3; // Response body (e.g., JSON)
+}
+
+// Request to download a file
+message DownloadFileRequest {
+  string session_id = 1;
+  string url = 2;
+  map<string, string> headers = 3;
+}
+
+// Response for file download (streaming)
+message DownloadFileResponse {
+  bytes data = 1; // Chunk data
+  int64 total_size = 2; // Total file size (set in the first chunk)
+}
+
+// Request to close a session
+message CloseSessionRequest {
+  string session_id = 1;
+}
+
+// Response for session closure
+message CloseSessionResponse {
+  bool success = 1;
+}

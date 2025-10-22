@@ -20,6 +20,9 @@ bun install
 # Linting
 bun run lint          # Check for issues
 bun run lint:fix      # Auto-fix issues
+
+# Protocol Buffers
+bun run proto:generate # Generate TypeScript type definitions from proto files
 ```
 
 ## Architecture Layers
@@ -38,10 +41,12 @@ The codebase follows Clean Architecture with these layers (from innermost to out
 3. **Infrastructure Layer** (`src/infrastructure/`)
    - Contains Playwright adapters and repository implementations
    - Implements interfaces defined in Domain/Application layers
+   - Contains gRPC type definitions generated from proto files (`src/infrastructure/grpc/generated/`)
 
 4. **Presentation Layer** (`src/presentation/`)
-   - Contains gRPC controllers and generated code from proto files
+   - Contains gRPC controllers and request handlers
    - Depends on Application Layer for use cases
+   - Uses type definitions from Infrastructure Layer
 
 5. **Shared Layer** (`src/shared/`)
    - Common types, errors, and utilities
@@ -66,11 +71,14 @@ The codebase follows Clean Architecture with these layers (from innermost to out
 
 ## Protocol Buffers
 
-Proto files should be placed in `proto/` directory. Generated TypeScript code goes to `src/presentation/grpc/generated/`.
+- **Proto files**: Place in `proto/` directory
+- **Generated type definitions**: Auto-generated to `src/infrastructure/grpc/generated/` via `bun run proto:generate`
+- **Approach**: Uses `@grpc/proto-loader` for dynamic proto loading at runtime with `proto-loader-gen-types` for TypeScript type definitions
 
 ## Core Dependencies
 
 - **playwright**: Browser automation
-- **@grpc/grpc-js**: gRPC implementation
+- **@grpc/grpc-js**: gRPC server/client implementation
+- **@grpc/proto-loader**: Dynamic proto file loading with type generation support
 
 Keep external dependencies minimal to maintain a lightweight footprint.
