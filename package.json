@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "biome check ./src",
     "lint:fix": "biome check --write --unsafe ./src",
-    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/infrastructure/grpc/generated proto/**/*.proto"
+    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/infrastructure/grpc/generated proto/**/*.proto",
+    "test": "bun test"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.7",

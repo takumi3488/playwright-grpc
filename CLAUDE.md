@@ -17,6 +17,11 @@ bun run src/index.ts
 # Install dependencies
 bun install
 
+# Testing
+bun test              # Run all tests
+bun test:watch        # Run tests in watch mode
+bun test:coverage     # Run tests with coverage
+
 # Linting
 bun run lint          # Check for issues
 bun run lint:fix      # Auto-fix issues
@@ -65,9 +70,21 @@ The codebase follows Clean Architecture with these layers (from innermost to out
 ## Development Workflow
 
 **After making code changes:**
-1. Run `bun run lint` to check for code style and quality issues
-2. Use `bun run lint:fix` to automatically fix issues when possible
-3. Update this `CLAUDE.md` file if you introduce new architectural patterns, commands, or conventions that future instances should know about
+1. Run `bun test` to execute all unit tests
+2. Run `bun run lint` to check for code style and quality issues
+3. Use `bun run lint:fix` to automatically fix issues when possible
+4. Update this `CLAUDE.md` file if you introduce new architectural patterns, commands, or conventions that future instances should know about
+
+## Testing
+
+The project includes comprehensive unit tests for all layers:
+
+- **Domain Layer**: Entity behavior tests
+- **Infrastructure Layer**: Repository and adapter tests
+- **Application Layer**: Use case tests with mocked dependencies
+- **Presentation Layer**: Controller tests with mocked use cases
+
+Test files are located next to their implementation files with a `.test.ts` extension.
 
 ## Protocol Buffers
 
