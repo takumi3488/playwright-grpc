@@ -6,8 +6,11 @@ package browser_proxy.v1;
 // Manages browser sessions using Playwright and executes
 // HTTP communications and file downloads
 service BrowserProxyService {
-  // Creates a browser session with cookies and headers configuration
+  // Creates a browser session (BrowserContext) with cookies and headers configuration
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+
+  // Navigates to a URL (creates page if not exists in the session)
+  rpc NavigatePage(NavigatePageRequest) returns (NavigatePageResponse);
 
   // Executes an HTTP GET request to fetch JSON or text
   rpc FetchHttp(FetchHttpRequest) returns (FetchHttpResponse);
@@ -28,6 +31,18 @@ message CreateSessionRequest {
 // Response for session creation
 message CreateSessionResponse {
   string session_id = 1; // Session identifier
+}
+
+// Request to navigate to a URL
+message NavigatePageRequest {
+  string session_id = 1; // Session identifier
+  string url = 2; // URL to navigate to
+}
+
+// Response for page navigation
+message NavigatePageResponse {
+  string page_id = 1; // Page identifier (one page per session)
+  int32 status_code = 2; // Navigation response status code
 }
 
 // Request to fetch HTTP content

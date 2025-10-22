@@ -75,6 +75,22 @@ The codebase follows Clean Architecture with these layers (from innermost to out
 - **Generated type definitions**: Auto-generated to `src/infrastructure/grpc/generated/` via `bun run proto:generate`
 - **Approach**: Uses `@grpc/proto-loader` for dynamic proto loading at runtime with `proto-loader-gen-types` for TypeScript type definitions
 
+## gRPC API Usage Flow
+
+The typical usage flow for the Browser Proxy Service:
+
+```
+CreateSession → Creates a BrowserContext with cookies and headers
+     ↓
+NavigatePage → Creates a page if not exists & navigates to URL with page.goto()
+     ↓
+FetchHttp / DownloadFile → Performs operations on the page
+     ↓
+CloseSession → Destroys the BrowserContext
+```
+
+**Key Design Principle**: One session (BrowserContext) has one page. The page is created on the first `NavigatePage` call and reused for subsequent operations within the same session.
+
 ## Core Dependencies
 
 - **playwright**: Browser automation
