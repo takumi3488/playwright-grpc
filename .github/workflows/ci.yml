@@ -35,6 +35,10 @@ jobs:
       - name: Up Docker Compose services
         run: docker compose up -d --wait playwright-grpc
 
+      - name: Show container logs
+        if: always()
+        run: docker compose logs playwright-grpc
+
       - name: Wait for gRPC server to be healthy
         run: |
           echo "Waiting for gRPC server to be healthy..."

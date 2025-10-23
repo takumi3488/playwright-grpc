@@ -20,10 +20,14 @@ COPY proto /app/proto
 FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408
 WORKDIR /app
 
-# Install Playwright system dependencies
+# Install Playwright system dependencies and grpc-health-probe
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-    apt-get update && bunx --bun playwright install-deps chromium
+    apt-get update && \
+    apt-get install -y wget && \
+    bunx --bun playwright install-deps chromium && \
+    wget -qO/usr/local/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/v0.4.37/grpc_health_probe-linux-amd64 && \
+    chmod +x /usr/local/bin/grpc_health_probe
 
 # Copy built application
 COPY --from=builder /app .
