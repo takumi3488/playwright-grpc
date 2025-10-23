@@ -6,20 +6,33 @@ WORKDIR /app
 COPY package.json bun.lockb* ./
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
 
-# Copy source code
+# Install Playwright browsers
+RUN bunx --bun playwright install chromium --with-deps
+
+# Copy source code and proto files
 COPY src /app/src
+COPY proto /app/proto
 
 # Runtime stage
 FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408
 WORKDIR /app
 
+# Install Playwright system dependencies
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
+    apt-get update && bunx --bun playwright install-deps chromium
+
 # Copy built application
 COPY --from=builder /app .
 
-# Expose port (adjust as needed)
-EXPOSE 3000
+# Copy Playwright browsers from builder
+COPY --from=builder /root/.cache/ms-playwright /root/.cache/ms-playwright
+
+# Expose gRPC port
+EXPOSE 50051
 
 # Start the application
 CMD ["bun", "run", "start"]

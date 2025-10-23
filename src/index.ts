@@ -26,7 +26,7 @@ const SERVER_HOST = process.env.HOST ?? "0.0.0.0";
  */
 function loadProtoDefinition(): ProtoGrpcType {
 	const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-		keepCase: true,
+		keepCase: false,
 		longs: String,
 		enums: String,
 		defaults: true,
