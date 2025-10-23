@@ -3,9 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
+    "start": "bun run src/index.ts",
     "lint": "biome check ./src",
     "lint:fix": "biome check --write --unsafe ./src",
-    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/infrastructure/grpc/generated proto/**/*.proto",
+    "proto:generate": "proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js --outDir=src/infrastructure/grpc/generated proto/browser_proxy/v1/browser_proxy.proto proto/grpc/health/v1/health.proto",
     "test": "bun test"
   },
   "devDependencies": {

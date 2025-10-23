@@ -58,3 +58,95 @@ src/
 - **Infrastructure Layer**: Implements interfaces defined in Domain/Application layers
 - **Presentation Layer**: Depends on Application Layer for use cases
 - **Shared Layer**: Can be used by any layer for common utilities
+
+## Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) runtime
+- [Docker](https://www.docker.com/) and Docker Compose (for containerized setup)
+- [runn](https://github.com/k1LoW/runn) (for E2E testing)
+
+### Installation
+
+```bash
+# Install dependencies
+bun install
+
+# Generate TypeScript types from proto files
+bun run proto:generate
+```
+
+### Running the Application
+
+#### Local Development
+
+```bash
+# Run the gRPC server locally
+bun run start
+```
+
+The server will start on `localhost:50051` by default.
+
+#### Docker Compose
+
+```bash
+# Build and start all services (playwright-grpc + Jaeger)
+docker compose up --build
+
+# Stop services
+docker compose down
+```
+
+Services:
+- **playwright-grpc**: gRPC server on port 50051
+- **Jaeger UI**: Tracing UI on http://localhost:16686
+
+### Testing
+
+#### Unit Tests
+
+```bash
+# Run all unit tests
+bun test
+
+# Run tests in watch mode
+bun test:watch
+
+# Run tests with coverage
+bun test:coverage
+```
+
+#### E2E Tests
+
+E2E tests are defined using [runn](https://github.com/k1LoW/runn), a tool for running scenario-based tests.
+
+```bash
+# Start the services with Docker Compose
+docker compose up -d
+
+# Wait for services to be healthy
+docker compose ps
+
+# Run E2E tests
+runn run e2e.runbook.yml
+
+# Stop services
+docker compose down
+```
+
+The E2E test covers the typical usage flow:
+1. Create a browser session with cookies and headers
+2. Navigate to a page (example.com)
+3. Fetch HTTP content
+4. Close the session
+
+### Code Quality
+
+```bash
+# Check code style and quality
+bun run lint
+
+# Auto-fix issues
+bun run lint:fix
+```

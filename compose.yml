@@ -3,11 +3,29 @@ services:
     image: jaegertracing/jaeger:latest@sha256:b585df1b6299bbbd16bf7c679da30389349736e4b6bc8f4f500142a75bf26ca8
     ports:
       - "16686:16686" # Jaeger UI
-      - "4317:4317"   # OTLP gRPC
+      - "4317:4317"  # OTLP gRPC
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:13133/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  playwright-grpc:
+    build: .
+    ports:
+      - "50051:50051" # gRPC server
+    environment:
+      - PORT=50051
+      - HOST=0.0.0.0
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    depends_on:
+      jaeger:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/grpc_health_probe", "-addr=:50051"]
       interval: 10s
       timeout: 5s
       retries: 5

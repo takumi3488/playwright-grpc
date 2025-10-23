@@ -1,0 +1,52 @@
+desc: playwright-grpc E2E Test
+runners:
+  grpc:
+    addr: localhost:50051
+    tls: false
+    protos:
+      - proto/browser_proxy/v1/browser_proxy.proto
+steps:
+  - desc: Create a browser session
+    grpc:
+      browser_proxy.v1.BrowserProxyService/CreateSession:
+        message:
+          cookies:
+            test_cookie: "test_value"
+          default_headers:
+            User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    test: |
+      current.res.status == 0 &&
+      current.res.message.session_id != ""
+
+  - desc: Navigate to a page
+    grpc:
+      browser_proxy.v1.BrowserProxyService/NavigatePage:
+        message:
+          session_id: "{{ steps[0].res.message.session_id }}"
+          url: "https://example.com"
+    test: |
+      current.res.status == 0 &&
+      current.res.message.status_code == 200 &&
+      current.res.message.page_id != ""
+
+  - desc: Fetch HTTP content
+    grpc:
+      browser_proxy.v1.BrowserProxyService/FetchHttp:
+        message:
+          session_id: "{{ steps[0].res.message.session_id }}"
+          url: "https://example.com"
+          headers:
+            Accept: "text/html"
+    test: |
+      current.res.status == 0 &&
+      current.res.message.status_code == 200 &&
+      len(current.res.message.body) > 0
+
+  - desc: Close the session
+    grpc:
+      browser_proxy.v1.BrowserProxyService/CloseSession:
+        message:
+          session_id: "{{ steps[0].res.message.session_id }}"
+    test: |
+      current.res.status == 0 &&
+      current.res.message.success == true
