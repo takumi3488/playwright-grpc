@@ -77,6 +77,25 @@ bun install
 bun run proto:generate
 ```
 
+### Configuration
+
+The application can be configured using the following environment variables:
+
+| Environment Variable | Description | Default Value |
+|---------------------|-------------|---------------|
+| `PORT` | gRPC server port number | `50051` |
+| `HOST` | gRPC server host address | `0.0.0.0` |
+| `SHUTDOWN_TIMEOUT_MS` | Graceful shutdown timeout in milliseconds | `30000` |
+
+**Example:**
+
+```bash
+# Set custom port and shutdown timeout
+export PORT=8080
+export SHUTDOWN_TIMEOUT_MS=60000
+bun run start
+```
+
 ### Running the Application
 
 #### Local Development
