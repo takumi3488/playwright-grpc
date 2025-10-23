@@ -27,6 +27,13 @@ const HEALTH_PROTO_PATH = resolve(
 );
 const SERVER_PORT = process.env.PORT ?? "50051";
 const SERVER_HOST = process.env.HOST ?? "0.0.0.0";
+const SHUTDOWN_TIMEOUT_MS = Number.parseInt(
+	process.env.SHUTDOWN_TIMEOUT_MS ?? "30000",
+	10,
+);
+
+// Shutdown state management
+let isShuttingDown = false;
 
 /**
  * Loads the proto file and returns the gRPC package definition
@@ -110,24 +117,57 @@ function startServer(server: grpc.Server): Promise<void> {
 }
 
 /**
- * Gracefully shuts down the server
+ * Gracefully shuts down the server with timeout
  */
 async function shutdown(
 	server: grpc.Server,
 	playwrightAdapter: PlaywrightAdapter,
+	timeoutMs: number = 30000,
 ): Promise<void> {
-	console.log("\\nShutting down gracefully...");
+	console.log("\nShutting down gracefully...");
 
-	// Close all Playwright contexts
-	await playwrightAdapter.closeAll();
-
-	// Gracefully shutdown gRPC server
-	return new Promise((resolve) => {
-		server.tryShutdown(() => {
-			console.log("Server shut down successfully");
+	// Create a timeout promise
+	const timeoutPromise = new Promise<void>((resolve) => {
+		setTimeout(() => {
+			console.warn(
+				`Shutdown timeout (${timeoutMs}ms) exceeded, forcing shutdown...`,
+			);
 			resolve();
-		});
+		}, timeoutMs);
 	});
+
+	// Create shutdown promise
+	const shutdownPromise = (async () => {
+		try {
+			// Stop accepting new requests
+			console.log("Stopping gRPC server from accepting new requests...");
+
+			// Close all Playwright contexts
+			console.log("Closing all Playwright browser contexts...");
+			await playwrightAdapter.closeAll();
+			console.log("All browser contexts closed");
+
+			// Gracefully shutdown gRPC server
+			console.log("Shutting down gRPC server...");
+			await new Promise<void>((resolve, reject) => {
+				server.tryShutdown((error) => {
+					if (error) {
+						console.error("Error during server shutdown:", error);
+						reject(error);
+					} else {
+						console.log("gRPC server shut down successfully");
+						resolve();
+					}
+				});
+			});
+		} catch (error) {
+			console.error("Error during graceful shutdown:", error);
+			throw error;
+		}
+	})();
+
+	// Race between shutdown and timeout
+	await Promise.race([shutdownPromise, timeoutPromise]);
 }
 
 /**
@@ -176,13 +216,36 @@ async function main() {
 		await startServer(server);
 
 		// Setup graceful shutdown
-		const shutdownHandler = async () => {
-			await shutdown(server, playwrightAdapter);
-			process.exit(0);
+		const shutdownHandler = async (signal: string) => {
+			// Prevent multiple shutdown attempts
+			if (isShuttingDown) {
+				console.log(
+					`\nReceived ${signal} but shutdown is already in progress. Press Ctrl+C again to force exit.`,
+				);
+				// Force exit on second signal
+				process.exit(1);
+			}
+
+			isShuttingDown = true;
+			console.log(`\nReceived ${signal} signal`);
+
+			try {
+				await shutdown(server, playwrightAdapter, SHUTDOWN_TIMEOUT_MS);
+				console.log("Shutdown completed successfully");
+				process.exit(0);
+			} catch (error) {
+				console.error("Shutdown failed:", error);
+				process.exit(1);
+			}
 		};
 
-		process.on("SIGINT", shutdownHandler);
-		process.on("SIGTERM", shutdownHandler);
+		process.on("SIGINT", () => shutdownHandler("SIGINT"));
+		process.on("SIGTERM", () => shutdownHandler("SIGTERM"));
+
+		console.log("Server is ready to handle requests");
+		console.log(
+			`Press Ctrl+C to gracefully shutdown (timeout: ${SHUTDOWN_TIMEOUT_MS}ms)`,
+		);
 	} catch (error) {
 		console.error("Failed to start server:", error);
 		process.exit(1);
