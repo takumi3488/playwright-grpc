@@ -45,10 +45,11 @@ jobs:
           timeout 60s bash -c 'until $(go env GOPATH)/bin/grpc-health-probe -addr=localhost:50051; do echo "Waiting..."; sleep 2; done'
           echo "gRPC server is healthy!"
 
+      - name: Install runn
+        run: go install github.com/k1LoW/runn/cmd/runn@latest
+
       - name: Run E2E tests
-        uses: k2tzumi/runn-action@latest
-        with:
-          path_pattern: ./e2e.runbook.yml
+        run: $(go env GOPATH)/bin/runn run ./e2e.runbook.yml
 
   automerge:
     runs-on: ubuntu-latest
