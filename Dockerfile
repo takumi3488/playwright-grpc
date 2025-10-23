@@ -12,9 +12,12 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
 # Install Playwright browsers
 RUN bunx --bun playwright install chromium --with-deps
 
-# Copy source code and proto files
-COPY src /app/src
+# Copy proto files and generate types
 COPY proto /app/proto
+RUN bun run proto:generate
+
+# Copy source code
+COPY src /app/src
 
 # Runtime stage
 FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408
