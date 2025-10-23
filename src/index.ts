@@ -11,12 +11,19 @@ import {
 import type { ProtoGrpcType } from "./infrastructure/grpc/generated/browser_proxy";
 import { PlaywrightAdapter } from "./infrastructure/playwright";
 import { InMemorySessionRepository } from "./infrastructure/repositories";
-import { BrowserProxyController } from "./presentation/grpc/controllers";
+import {
+	BrowserProxyController,
+	HealthController,
+} from "./presentation/grpc/controllers";
 
 // Configuration
-const PROTO_PATH = resolve(
+const BROWSER_PROXY_PROTO_PATH = resolve(
 	import.meta.dir,
-	"../proto/browser_proxy/browser_proxy.proto",
+	"../proto/browser_proxy/v1/browser_proxy.proto",
+);
+const HEALTH_PROTO_PATH = resolve(
+	import.meta.dir,
+	"../proto/grpc/health/v1/health.proto",
 );
 const SERVER_PORT = process.env.PORT ?? "50051";
 const SERVER_HOST = process.env.HOST ?? "0.0.0.0";
@@ -25,7 +32,7 @@ const SERVER_HOST = process.env.HOST ?? "0.0.0.0";
  * Loads the proto file and returns the gRPC package definition
  */
 function loadProtoDefinition(): ProtoGrpcType {
-	const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+	const packageDefinition = protoLoader.loadSync(BROWSER_PROXY_PROTO_PATH, {
 		keepCase: false,
 		longs: String,
 		enums: String,
@@ -39,15 +46,43 @@ function loadProtoDefinition(): ProtoGrpcType {
 }
 
 /**
+ * Loads the health proto file and returns the gRPC package definition
+ */
+function loadHealthProtoDefinition(): grpc.GrpcObject {
+	const packageDefinition = protoLoader.loadSync(HEALTH_PROTO_PATH, {
+		keepCase: false,
+		longs: String,
+		enums: String,
+		defaults: true,
+		oneofs: true,
+	});
+
+	return grpc.loadPackageDefinition(packageDefinition);
+}
+
+/**
  * Creates and configures the gRPC server
  */
-function createServer(controller: BrowserProxyController): grpc.Server {
+function createServer(
+	browserProxyController: BrowserProxyController,
+	healthController: HealthController,
+): grpc.Server {
 	const server = new grpc.Server();
-	const proto = loadProtoDefinition();
+	const browserProxyProto = loadProtoDefinition();
+	const healthProto = loadHealthProtoDefinition();
 
+	// Register BrowserProxyService
 	server.addService(
-		proto.browser_proxy.v1.BrowserProxyService.service,
-		controller as unknown as grpc.UntypedServiceImplementation,
+		browserProxyProto.browser_proxy.v1.BrowserProxyService.service,
+		browserProxyController as unknown as grpc.UntypedServiceImplementation,
+	);
+
+	// Register Health Check Service
+	// biome-ignore lint: accessing nested proto package
+	const healthService = (healthProto.grpc as any).health.v1.Health.service;
+	server.addService(
+		healthService,
+		healthController as unknown as grpc.UntypedServiceImplementation,
 	);
 
 	return server;
@@ -126,17 +161,18 @@ async function main() {
 			playwrightAdapter,
 		);
 
-		// Create controller
-		const controller = new BrowserProxyController(
+		// Create controllers
+		const browserProxyController = new BrowserProxyController(
 			createSessionUseCase,
 			navigatePageUseCase,
 			fetchHttpUseCase,
 			downloadFileUseCase,
 			closeSessionUseCase,
 		);
+		const healthController = new HealthController();
 
 		// Create and start server
-		const server = createServer(controller);
+		const server = createServer(browserProxyController, healthController);
 		await startServer(server);
 
 		// Setup graceful shutdown

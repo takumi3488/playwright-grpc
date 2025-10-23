@@ -1,0 +1,31 @@
+version: v2
+lint:
+  use:
+    - STANDARD
+  except:
+    # Health check protocol is a standard gRPC definition
+    # and doesn't follow some of our naming conventions
+    - SERVICE_SUFFIX
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_REQUEST_STANDARD_NAME
+    - RPC_RESPONSE_STANDARD_NAME
+    - ENUM_VALUE_PREFIX
+    - ENUM_ZERO_VALUE_SUFFIX
+  ignore_only:
+    SERVICE_SUFFIX:
+      - proto/grpc/health/v1/health.proto
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - proto/grpc/health/v1/health.proto
+    RPC_REQUEST_STANDARD_NAME:
+      - proto/grpc/health/v1/health.proto
+    RPC_RESPONSE_STANDARD_NAME:
+      - proto/grpc/health/v1/health.proto
+    ENUM_VALUE_PREFIX:
+      - proto/grpc/health/v1/health.proto
+    ENUM_ZERO_VALUE_SUFFIX:
+      - proto/grpc/health/v1/health.proto
+breaking:
+  use:
+    - FILE
+modules:
+  - path: proto
