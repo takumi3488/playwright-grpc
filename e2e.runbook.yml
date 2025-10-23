@@ -4,7 +4,7 @@ runners:
     addr: localhost:50051
     tls: false
     protos:
-      - proto/browser_proxy/browser_proxy.proto
+      - proto/browser_proxy/v1/browser_proxy.proto
 steps:
   - desc: Create a browser session
     grpc:
