@@ -6,6 +6,7 @@ import {
 	CreateSessionUseCase,
 	DownloadFileUseCase,
 	FetchHttpUseCase,
+	GetCookiesUseCase,
 	NavigatePageUseCase,
 } from "./application/usecases";
 import type { ProtoGrpcType } from "./infrastructure/grpc/generated/browser_proxy";
@@ -196,6 +197,10 @@ async function main() {
 			sessionRepository,
 			playwrightAdapter,
 		);
+		const getCookiesUseCase = new GetCookiesUseCase(
+			sessionRepository,
+			playwrightAdapter,
+		);
 		const closeSessionUseCase = new CloseSessionUseCase(
 			sessionRepository,
 			playwrightAdapter,
@@ -207,6 +212,7 @@ async function main() {
 			navigatePageUseCase,
 			fetchHttpUseCase,
 			downloadFileUseCase,
+			getCookiesUseCase,
 			closeSessionUseCase,
 		);
 		const healthController = new HealthController();

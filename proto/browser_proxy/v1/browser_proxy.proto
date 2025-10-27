@@ -18,6 +18,9 @@ service BrowserProxyService {
   // Downloads binary files with streaming support
   rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileResponse);
 
+  // Retrieves cookies from the current session
+  rpc GetCookies(GetCookiesRequest) returns (GetCookiesResponse);
+
   // Closes and destroys a session
   rpc CloseSession(CloseSessionRequest) returns (CloseSessionResponse);
 }
@@ -70,6 +73,29 @@ message DownloadFileRequest {
 message DownloadFileResponse {
   bytes data = 1; // Chunk data
   int64 total_size = 2; // Total file size (set in the first chunk)
+}
+
+// Request to retrieve cookies
+message GetCookiesRequest {
+  string session_id = 1; // Session identifier
+  optional string url = 2; // Optional URL to filter cookies
+}
+
+// Cookie information
+message Cookie {
+  string name = 1;
+  string value = 2;
+  string domain = 3;
+  string path = 4;
+  double expires = 5; // Unix timestamp, -1 for session cookies
+  bool http_only = 6;
+  bool secure = 7;
+  string same_site = 8; // "Strict", "Lax", or "None"
+}
+
+// Response containing cookies
+message GetCookiesResponse {
+  repeated Cookie cookies = 1;
 }
 
 // Request to close a session

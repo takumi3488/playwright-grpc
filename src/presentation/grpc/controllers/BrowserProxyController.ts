@@ -4,6 +4,7 @@ import type {
 	CreateSessionUseCase,
 	DownloadFileUseCase,
 	FetchHttpUseCase,
+	GetCookiesUseCase,
 	NavigatePageUseCase,
 } from "../../../application/usecases";
 import type { CloseSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionRequest";
@@ -14,6 +15,8 @@ import type { DownloadFileRequest__Output } from "../../../infrastructure/grpc/g
 import type { DownloadFileResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/DownloadFileResponse";
 import type { FetchHttpRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/FetchHttpRequest";
 import type { FetchHttpResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/FetchHttpResponse";
+import type { GetCookiesRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/GetCookiesRequest";
+import type { GetCookiesResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/GetCookiesResponse";
 import type { NavigatePageRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/NavigatePageRequest";
 import type { NavigatePageResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/NavigatePageResponse";
 import { BaseError } from "../../../shared/errors";
@@ -28,6 +31,7 @@ export class BrowserProxyController {
 		private navigatePageUseCase: NavigatePageUseCase,
 		private fetchHttpUseCase: FetchHttpUseCase,
 		private downloadFileUseCase: DownloadFileUseCase,
+		private getCookiesUseCase: GetCookiesUseCase,
 		private closeSessionUseCase: CloseSessionUseCase,
 	) {}
 
@@ -137,6 +141,42 @@ export class BrowserProxyController {
 			call.end();
 		} catch (error) {
 			call.destroy(this.handleError(error));
+		}
+	};
+
+	/**
+	 * Retrieves cookies from a session
+	 */
+	GetCookies: grpc.handleUnaryCall<
+		GetCookiesRequest__Output,
+		GetCookiesResponse
+	> = async (call, callback) => {
+		try {
+			const { sessionId, url } = call.request;
+
+			if (!sessionId) {
+				throw new Error("sessionId is required");
+			}
+
+			const cookies = await this.getCookiesUseCase.execute(
+				sessionId,
+				url || undefined,
+			);
+
+			callback(null, {
+				cookies: cookies.map((cookie) => ({
+					name: cookie.name,
+					value: cookie.value,
+					domain: cookie.domain,
+					path: cookie.path,
+					expires: cookie.expires,
+					httpOnly: cookie.httpOnly,
+					secure: cookie.secure,
+					sameSite: cookie.sameSite,
+				})),
+			});
+		} catch (error) {
+			callback(this.handleError(error), null);
 		}
 	};
 

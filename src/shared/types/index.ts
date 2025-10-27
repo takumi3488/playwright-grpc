@@ -28,3 +28,17 @@ export interface NavigationResult {
 	pageId: string;
 	statusCode: number;
 }
+
+/**
+ * Cookie information
+ */
+export interface Cookie {
+	name: string;
+	value: string;
+	domain: string;
+	path: string;
+	expires: number; // Unix timestamp, -1 for session cookies
+	httpOnly: boolean;
+	secure: boolean;
+	sameSite: "Strict" | "Lax" | "None";
+}

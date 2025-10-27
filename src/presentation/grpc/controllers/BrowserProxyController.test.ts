@@ -5,6 +5,7 @@ import type {
 	CreateSessionUseCase,
 	DownloadFileUseCase,
 	FetchHttpUseCase,
+	GetCookiesUseCase,
 	NavigatePageUseCase,
 } from "../../../application/usecases";
 import type { CloseSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionRequest";
@@ -29,6 +30,7 @@ describe("BrowserProxyController", () => {
 				{} as NavigatePageUseCase,
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
+				{} as GetCookiesUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -71,6 +73,7 @@ describe("BrowserProxyController", () => {
 				mockNavigatePageUseCase,
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
+				{} as GetCookiesUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -101,6 +104,7 @@ describe("BrowserProxyController", () => {
 				{} as NavigatePageUseCase,
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
+				{} as GetCookiesUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -143,6 +147,7 @@ describe("BrowserProxyController", () => {
 				{} as NavigatePageUseCase,
 				mockFetchHttpUseCase,
 				{} as DownloadFileUseCase,
+				{} as GetCookiesUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -181,6 +186,7 @@ describe("BrowserProxyController", () => {
 				{} as NavigatePageUseCase,
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
+				{} as GetCookiesUseCase,
 				mockCloseSessionUseCase,
 			);
 

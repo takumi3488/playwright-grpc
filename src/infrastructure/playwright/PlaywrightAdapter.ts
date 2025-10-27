@@ -6,6 +6,7 @@ import {
 	NavigationError,
 } from "../../shared/errors";
 import type {
+	Cookie,
 	Cookies,
 	Headers,
 	HttpResponse,
@@ -172,6 +173,31 @@ export class PlaywrightAdapter {
 				error instanceof Error ? error.message : String(error),
 			);
 		}
+	}
+
+	/**
+	 * Retrieves cookies from the context
+	 */
+	async getCookies(sessionId: string, url?: string): Promise<Cookie[]> {
+		const contextData = this.contexts.get(sessionId);
+		if (!contextData) {
+			throw new Error(`Context not found for session: ${sessionId}`);
+		}
+
+		const playwrightCookies = url
+			? await contextData.context.cookies(url)
+			: await contextData.context.cookies();
+
+		return playwrightCookies.map((cookie) => ({
+			name: cookie.name,
+			value: cookie.value,
+			domain: cookie.domain,
+			path: cookie.path,
+			expires: cookie.expires ?? -1,
+			httpOnly: cookie.httpOnly,
+			secure: cookie.secure,
+			sameSite: (cookie.sameSite as "Strict" | "Lax" | "None") || "None",
+		}));
 	}
 
 	/**
