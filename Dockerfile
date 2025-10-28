@@ -2,6 +2,14 @@
 FROM oven/bun:1.3@sha256:9c5d3c92b234b4708198577d2f39aab7397a242a40da7c2f059e51b9dc62b408 AS builder
 WORKDIR /app
 
+# Install buf CLI
+RUN apt-get update && \
+    apt-get install -y curl && \
+    BUF_VERSION=1.59.0 && \
+    curl -sSL "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m)" -o /usr/local/bin/buf && \
+    chmod +x /usr/local/bin/buf && \
+    buf --version
+
 # Copy package files
 COPY package.json bun.lockb* ./
 
@@ -12,8 +20,9 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
 # Install Playwright browsers
 RUN bunx --bun playwright install chromium --with-deps
 
-# Copy proto files and generate types
+# Copy proto files, buf configuration, and generate types
 COPY proto /app/proto
+COPY buf.yaml buf.gen.yaml /app/
 RUN bun run proto:generate
 
 # Copy source code
