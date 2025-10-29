@@ -108,6 +108,7 @@ export class PlaywrightAdapter {
 		sessionId: string,
 		url: string,
 		headers: Headers,
+		credential?: string,
 	): Promise<HttpResponse> {
 		const contextData = this.contexts.get(sessionId);
 		if (!contextData?.page) {
@@ -117,8 +118,12 @@ export class PlaywrightAdapter {
 		try {
 			// Execute fetch within the browser context
 			const result = await contextData.page.evaluate(
-				async ({ url, headers }) => {
-					const response = await fetch(url, { headers });
+				async ({ url, headers, credential }) => {
+					const fetchOptions: RequestInit = { headers };
+					if (credential) {
+						fetchOptions.credentials = credential as RequestCredentials;
+					}
+					const response = await fetch(url, fetchOptions);
 					const body = await response.arrayBuffer();
 					const responseHeaders: Record<string, string> = {};
 
@@ -132,7 +137,7 @@ export class PlaywrightAdapter {
 						body: Array.from(new Uint8Array(body)),
 					};
 				},
-				{ url, headers },
+				{ url, headers, credential },
 			);
 
 			return {

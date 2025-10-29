@@ -16,6 +16,7 @@ export class FetchHttpUseCase {
 		sessionId: string,
 		url: string,
 		headers: Headers,
+		credential?: string,
 	): Promise<HttpResponse> {
 		// Verify session exists
 		const session = await this.sessionRepository.findById(sessionId);
@@ -31,6 +32,11 @@ export class FetchHttpUseCase {
 		}
 
 		// Fetch HTTP content
-		return await this.playwrightAdapter.fetchHttp(sessionId, url, headers);
+		return await this.playwrightAdapter.fetchHttp(
+			sessionId,
+			url,
+			headers,
+			credential,
+		);
 	}
 }
