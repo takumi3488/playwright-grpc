@@ -8,9 +8,9 @@
 export type Headers = Record<string, string>;
 
 /**
- * Cookies represented as a key-value map
+ * Cookies represented as an array of Cookie objects
  */
-export type Cookies = Record<string, string>;
+export type Cookies = Cookie[];
 
 /**
  * HTTP response structure

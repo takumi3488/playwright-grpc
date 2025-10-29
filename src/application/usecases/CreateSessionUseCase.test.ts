@@ -17,7 +17,18 @@ describe("CreateSessionUseCase", () => {
 		} as unknown as PlaywrightAdapter;
 
 		const useCase = new CreateSessionUseCase(mockRepository, mockAdapter);
-		const cookies = { sessionCookie: "abc123" };
+		const cookies = [
+			{
+				name: "sessionCookie",
+				value: "abc123",
+				domain: ".example.com",
+				path: "/",
+				expires: -1,
+				httpOnly: false,
+				secure: true,
+				sameSite: "Lax" as const,
+			},
+		];
 		const headers = { "User-Agent": "test-agent" };
 
 		const sessionId = await useCase.execute(cookies, headers);
@@ -47,8 +58,8 @@ describe("CreateSessionUseCase", () => {
 
 		const useCase = new CreateSessionUseCase(mockRepository, mockAdapter);
 
-		const sessionId = await useCase.execute({}, {});
+		const sessionId = await useCase.execute([], {});
 
-		expect(mockAdapter.createContext).toHaveBeenCalledWith(sessionId, {}, {});
+		expect(mockAdapter.createContext).toHaveBeenCalledWith(sessionId, [], {});
 	});
 });

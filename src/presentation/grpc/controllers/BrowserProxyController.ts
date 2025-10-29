@@ -46,7 +46,7 @@ export class BrowserProxyController {
 			const { cookies, defaultHeaders } = call.request;
 
 			const sessionId = await this.createSessionUseCase.execute(
-				cookies ?? {},
+				cookies ?? [],
 				defaultHeaders ?? {},
 			);
 

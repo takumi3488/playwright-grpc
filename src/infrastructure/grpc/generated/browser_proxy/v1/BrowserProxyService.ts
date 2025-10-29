@@ -10,6 +10,8 @@ import type { DownloadFileRequest as _browser_proxy_v1_DownloadFileRequest, Down
 import type { DownloadFileResponse as _browser_proxy_v1_DownloadFileResponse, DownloadFileResponse__Output as _browser_proxy_v1_DownloadFileResponse__Output } from '../../browser_proxy/v1/DownloadFileResponse';
 import type { FetchHttpRequest as _browser_proxy_v1_FetchHttpRequest, FetchHttpRequest__Output as _browser_proxy_v1_FetchHttpRequest__Output } from '../../browser_proxy/v1/FetchHttpRequest';
 import type { FetchHttpResponse as _browser_proxy_v1_FetchHttpResponse, FetchHttpResponse__Output as _browser_proxy_v1_FetchHttpResponse__Output } from '../../browser_proxy/v1/FetchHttpResponse';
+import type { GetCookiesRequest as _browser_proxy_v1_GetCookiesRequest, GetCookiesRequest__Output as _browser_proxy_v1_GetCookiesRequest__Output } from '../../browser_proxy/v1/GetCookiesRequest';
+import type { GetCookiesResponse as _browser_proxy_v1_GetCookiesResponse, GetCookiesResponse__Output as _browser_proxy_v1_GetCookiesResponse__Output } from '../../browser_proxy/v1/GetCookiesResponse';
 import type { NavigatePageRequest as _browser_proxy_v1_NavigatePageRequest, NavigatePageRequest__Output as _browser_proxy_v1_NavigatePageRequest__Output } from '../../browser_proxy/v1/NavigatePageRequest';
 import type { NavigatePageResponse as _browser_proxy_v1_NavigatePageResponse, NavigatePageResponse__Output as _browser_proxy_v1_NavigatePageResponse__Output } from '../../browser_proxy/v1/NavigatePageResponse';
 
@@ -46,6 +48,15 @@ export interface BrowserProxyServiceClient extends grpc.Client {
   fetchHttp(argument: _browser_proxy_v1_FetchHttpRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_FetchHttpResponse__Output>): grpc.ClientUnaryCall;
   fetchHttp(argument: _browser_proxy_v1_FetchHttpRequest, callback: grpc.requestCallback<_browser_proxy_v1_FetchHttpResponse__Output>): grpc.ClientUnaryCall;
   
+  GetCookies(argument: _browser_proxy_v1_GetCookiesRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  GetCookies(argument: _browser_proxy_v1_GetCookiesRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  GetCookies(argument: _browser_proxy_v1_GetCookiesRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  GetCookies(argument: _browser_proxy_v1_GetCookiesRequest, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  getCookies(argument: _browser_proxy_v1_GetCookiesRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  getCookies(argument: _browser_proxy_v1_GetCookiesRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  getCookies(argument: _browser_proxy_v1_GetCookiesRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  getCookies(argument: _browser_proxy_v1_GetCookiesRequest, callback: grpc.requestCallback<_browser_proxy_v1_GetCookiesResponse__Output>): grpc.ClientUnaryCall;
+  
   NavigatePage(argument: _browser_proxy_v1_NavigatePageRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_NavigatePageResponse__Output>): grpc.ClientUnaryCall;
   NavigatePage(argument: _browser_proxy_v1_NavigatePageRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_NavigatePageResponse__Output>): grpc.ClientUnaryCall;
   NavigatePage(argument: _browser_proxy_v1_NavigatePageRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_NavigatePageResponse__Output>): grpc.ClientUnaryCall;
@@ -66,6 +77,8 @@ export interface BrowserProxyServiceHandlers extends grpc.UntypedServiceImplemen
   
   FetchHttp: grpc.handleUnaryCall<_browser_proxy_v1_FetchHttpRequest__Output, _browser_proxy_v1_FetchHttpResponse>;
   
+  GetCookies: grpc.handleUnaryCall<_browser_proxy_v1_GetCookiesRequest__Output, _browser_proxy_v1_GetCookiesResponse>;
+  
   NavigatePage: grpc.handleUnaryCall<_browser_proxy_v1_NavigatePageRequest__Output, _browser_proxy_v1_NavigatePageResponse>;
   
 }
@@ -75,5 +88,6 @@ export interface BrowserProxyServiceDefinition extends grpc.ServiceDefinition {
   CreateSession: MethodDefinition<_browser_proxy_v1_CreateSessionRequest, _browser_proxy_v1_CreateSessionResponse, _browser_proxy_v1_CreateSessionRequest__Output, _browser_proxy_v1_CreateSessionResponse__Output>
   DownloadFile: MethodDefinition<_browser_proxy_v1_DownloadFileRequest, _browser_proxy_v1_DownloadFileResponse, _browser_proxy_v1_DownloadFileRequest__Output, _browser_proxy_v1_DownloadFileResponse__Output>
   FetchHttp: MethodDefinition<_browser_proxy_v1_FetchHttpRequest, _browser_proxy_v1_FetchHttpResponse, _browser_proxy_v1_FetchHttpRequest__Output, _browser_proxy_v1_FetchHttpResponse__Output>
+  GetCookies: MethodDefinition<_browser_proxy_v1_GetCookiesRequest, _browser_proxy_v1_GetCookiesResponse, _browser_proxy_v1_GetCookiesRequest__Output, _browser_proxy_v1_GetCookiesResponse__Output>
   NavigatePage: MethodDefinition<_browser_proxy_v1_NavigatePageRequest, _browser_proxy_v1_NavigatePageResponse, _browser_proxy_v1_NavigatePageRequest__Output, _browser_proxy_v1_NavigatePageResponse__Output>
 }

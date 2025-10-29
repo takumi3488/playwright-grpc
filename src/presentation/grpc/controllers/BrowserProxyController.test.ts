@@ -36,7 +36,18 @@ describe("BrowserProxyController", () => {
 
 			const mockCall = {
 				request: {
-					cookies: { cookie1: "value1" },
+					cookies: [
+						{
+							name: "cookie1",
+							value: "value1",
+							domain: ".example.com",
+							path: "/",
+							expires: -1,
+							httpOnly: false,
+							secure: true,
+							sameSite: "Lax",
+						},
+					],
 					defaultHeaders: { "User-Agent": "test" },
 				},
 			} as unknown as grpc.ServerUnaryCall<
@@ -53,7 +64,18 @@ describe("BrowserProxyController", () => {
 				sessionId: "session-123",
 			});
 			expect(mockCreateSessionUseCase.execute).toHaveBeenCalledWith(
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 			);
 		});
