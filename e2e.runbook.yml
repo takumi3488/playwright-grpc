@@ -11,7 +11,14 @@ steps:
       browser_proxy.v1.BrowserProxyService/CreateSession:
         message:
           cookies:
-            test_cookie: "test_value"
+            - name: "test_cookie"
+              value: "test_value"
+              domain: ".example.com"
+              path: "/"
+              expires: -1
+              http_only: false
+              secure: false
+              same_site: "Lax"
           default_headers:
             User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     test: |

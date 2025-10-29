@@ -6,12 +6,34 @@ describe("Session", () => {
 		it("should create a session with required properties", () => {
 			const session = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 			);
 
 			expect(session.id).toBe("session-123");
-			expect(session.cookies).toEqual({ cookie1: "value1" });
+			expect(session.cookies).toEqual([
+				{
+					name: "cookie1",
+					value: "value1",
+					domain: ".example.com",
+					path: "/",
+					expires: -1,
+					httpOnly: false,
+					secure: true,
+					sameSite: "Lax",
+				},
+			]);
 			expect(session.defaultHeaders).toEqual({ "User-Agent": "test" });
 			expect(session.pageId).toBeUndefined();
 		});
@@ -19,7 +41,18 @@ describe("Session", () => {
 		it("should create a session with pageId", () => {
 			const session = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 				"page-456",
 			);
@@ -33,7 +66,18 @@ describe("Session", () => {
 		it("should return a new session with updated pageId", () => {
 			const originalSession = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 			);
 
@@ -41,7 +85,18 @@ describe("Session", () => {
 
 			expect(updatedSession).not.toBe(originalSession);
 			expect(updatedSession.id).toBe("session-123");
-			expect(updatedSession.cookies).toEqual({ cookie1: "value1" });
+			expect(updatedSession.cookies).toEqual([
+				{
+					name: "cookie1",
+					value: "value1",
+					domain: ".example.com",
+					path: "/",
+					expires: -1,
+					httpOnly: false,
+					secure: true,
+					sameSite: "Lax",
+				},
+			]);
 			expect(updatedSession.defaultHeaders).toEqual({ "User-Agent": "test" });
 			expect(updatedSession.pageId).toBe("page-456");
 		});
@@ -49,7 +104,18 @@ describe("Session", () => {
 		it("should not mutate the original session", () => {
 			const originalSession = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 			);
 
@@ -63,7 +129,18 @@ describe("Session", () => {
 		it("should return false when pageId is undefined", () => {
 			const session = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 			);
 
@@ -73,7 +150,18 @@ describe("Session", () => {
 		it("should return true when pageId is set", () => {
 			const session = new Session(
 				"session-123",
-				{ cookie1: "value1" },
+				[
+					{
+						name: "cookie1",
+						value: "value1",
+						domain: ".example.com",
+						path: "/",
+						expires: -1,
+						httpOnly: false,
+						secure: true,
+						sameSite: "Lax",
+					},
+				],
 				{ "User-Agent": "test" },
 				"page-456",
 			);

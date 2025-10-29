@@ -27,7 +27,7 @@ service BrowserProxyService {
 
 // Request to create a new session
 message CreateSessionRequest {
-  map<string, string> cookies = 1; // Authentication cookies (e.g., FANBOXSESSID)
+  repeated Cookie cookies = 1; // Authentication cookies with full metadata
   map<string, string> default_headers = 2; // Common headers (e.g., User-Agent)
 }
 
