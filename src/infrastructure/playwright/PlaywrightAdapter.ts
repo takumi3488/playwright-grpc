@@ -115,21 +115,30 @@ export class PlaywrightAdapter {
 		}
 
 		try {
-			const response = await contextData.page.request.get(url, {
-				headers,
-			});
+			// Execute fetch within the browser context
+			const result = await contextData.page.evaluate(
+				async ({ url, headers }) => {
+					const response = await fetch(url, { headers });
+					const body = await response.arrayBuffer();
+					const responseHeaders: Record<string, string> = {};
 
-			const body = await response.body();
-			const responseHeaders: Headers = {};
+					response.headers.forEach((value, key) => {
+						responseHeaders[key] = value;
+					});
 
-			for (const [key, value] of Object.entries(response.headers())) {
-				responseHeaders[key] = value;
-			}
+					return {
+						statusCode: response.status,
+						headers: responseHeaders,
+						body: Array.from(new Uint8Array(body)),
+					};
+				},
+				{ url, headers },
+			);
 
 			return {
-				statusCode: response.status(),
-				headers: responseHeaders,
-				body,
+				statusCode: result.statusCode,
+				headers: result.headers,
+				body: new Uint8Array(result.body),
 			};
 		} catch (error) {
 			throw new HttpFetchError(
