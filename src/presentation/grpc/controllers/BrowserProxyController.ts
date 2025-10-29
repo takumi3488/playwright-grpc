@@ -91,7 +91,7 @@ export class BrowserProxyController {
 	FetchHttp: grpc.handleUnaryCall<FetchHttpRequest__Output, FetchHttpResponse> =
 		async (call, callback) => {
 			try {
-				const { sessionId, url, headers } = call.request;
+				const { sessionId, url, headers, credential } = call.request;
 
 				if (!sessionId || !url) {
 					throw new Error("sessionId and url are required");
@@ -101,6 +101,7 @@ export class BrowserProxyController {
 					sessionId,
 					url,
 					headers ?? {},
+					credential,
 				);
 
 				callback(null, {

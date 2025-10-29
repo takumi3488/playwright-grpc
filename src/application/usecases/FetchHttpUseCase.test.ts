@@ -45,6 +45,7 @@ describe("FetchHttpUseCase", () => {
 			"session-123",
 			"https://api.example.com/data",
 			{ Accept: "application/json" },
+			undefined,
 		);
 	});
 

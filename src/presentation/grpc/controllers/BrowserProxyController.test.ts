@@ -183,6 +183,7 @@ describe("BrowserProxyController", () => {
 					sessionId: "session-123",
 					url: "https://api.example.com/data",
 					headers: { Accept: "application/json" },
+					credential: "include",
 				},
 			} as unknown as grpc.ServerUnaryCall<
 				FetchHttpRequest__Output,
@@ -194,6 +195,12 @@ describe("BrowserProxyController", () => {
 
 			await controller.FetchHttp(mockCall, mockCallback);
 
+			expect(mockFetchHttpUseCase.execute).toHaveBeenCalledWith(
+				"session-123",
+				"https://api.example.com/data",
+				{ Accept: "application/json" },
+				"include",
+			);
 			expect(mockCallback).toHaveBeenCalledWith(null, {
 				statusCode: 200,
 				headers: { "content-type": "application/json" },
