@@ -2,6 +2,7 @@ import { resolve } from "node:path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import {
+	CaptureScreenshotUseCase,
 	CloseSessionUseCase,
 	CreateSessionUseCase,
 	DownloadFileUseCase,
@@ -201,6 +202,10 @@ async function main() {
 			sessionRepository,
 			playwrightAdapter,
 		);
+		const captureScreenshotUseCase = new CaptureScreenshotUseCase(
+			sessionRepository,
+			playwrightAdapter,
+		);
 		const closeSessionUseCase = new CloseSessionUseCase(
 			sessionRepository,
 			playwrightAdapter,
@@ -213,6 +218,7 @@ async function main() {
 			fetchHttpUseCase,
 			downloadFileUseCase,
 			getCookiesUseCase,
+			captureScreenshotUseCase,
 			closeSessionUseCase,
 		);
 		const healthController = new HealthController();

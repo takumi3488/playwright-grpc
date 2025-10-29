@@ -1,3 +1,4 @@
+export { CaptureScreenshotUseCase } from "./CaptureScreenshotUseCase";
 export { CloseSessionUseCase } from "./CloseSessionUseCase";
 export { CreateSessionUseCase } from "./CreateSessionUseCase";
 export { DownloadFileUseCase } from "./DownloadFileUseCase";

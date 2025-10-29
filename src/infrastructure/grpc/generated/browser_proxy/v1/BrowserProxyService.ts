@@ -2,6 +2,8 @@
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
+import type { CaptureScreenshotRequest as _browser_proxy_v1_CaptureScreenshotRequest, CaptureScreenshotRequest__Output as _browser_proxy_v1_CaptureScreenshotRequest__Output } from '../../browser_proxy/v1/CaptureScreenshotRequest';
+import type { CaptureScreenshotResponse as _browser_proxy_v1_CaptureScreenshotResponse, CaptureScreenshotResponse__Output as _browser_proxy_v1_CaptureScreenshotResponse__Output } from '../../browser_proxy/v1/CaptureScreenshotResponse';
 import type { CloseSessionRequest as _browser_proxy_v1_CloseSessionRequest, CloseSessionRequest__Output as _browser_proxy_v1_CloseSessionRequest__Output } from '../../browser_proxy/v1/CloseSessionRequest';
 import type { CloseSessionResponse as _browser_proxy_v1_CloseSessionResponse, CloseSessionResponse__Output as _browser_proxy_v1_CloseSessionResponse__Output } from '../../browser_proxy/v1/CloseSessionResponse';
 import type { CreateSessionRequest as _browser_proxy_v1_CreateSessionRequest, CreateSessionRequest__Output as _browser_proxy_v1_CreateSessionRequest__Output } from '../../browser_proxy/v1/CreateSessionRequest';
@@ -16,6 +18,15 @@ import type { NavigatePageRequest as _browser_proxy_v1_NavigatePageRequest, Navi
 import type { NavigatePageResponse as _browser_proxy_v1_NavigatePageResponse, NavigatePageResponse__Output as _browser_proxy_v1_NavigatePageResponse__Output } from '../../browser_proxy/v1/NavigatePageResponse';
 
 export interface BrowserProxyServiceClient extends grpc.Client {
+  CaptureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  CaptureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  CaptureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  CaptureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  captureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  captureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  captureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  captureScreenshot(argument: _browser_proxy_v1_CaptureScreenshotRequest, callback: grpc.requestCallback<_browser_proxy_v1_CaptureScreenshotResponse__Output>): grpc.ClientUnaryCall;
+  
   CloseSession(argument: _browser_proxy_v1_CloseSessionRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CloseSessionResponse__Output>): grpc.ClientUnaryCall;
   CloseSession(argument: _browser_proxy_v1_CloseSessionRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_browser_proxy_v1_CloseSessionResponse__Output>): grpc.ClientUnaryCall;
   CloseSession(argument: _browser_proxy_v1_CloseSessionRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_browser_proxy_v1_CloseSessionResponse__Output>): grpc.ClientUnaryCall;
@@ -69,6 +80,8 @@ export interface BrowserProxyServiceClient extends grpc.Client {
 }
 
 export interface BrowserProxyServiceHandlers extends grpc.UntypedServiceImplementation {
+  CaptureScreenshot: grpc.handleUnaryCall<_browser_proxy_v1_CaptureScreenshotRequest__Output, _browser_proxy_v1_CaptureScreenshotResponse>;
+  
   CloseSession: grpc.handleUnaryCall<_browser_proxy_v1_CloseSessionRequest__Output, _browser_proxy_v1_CloseSessionResponse>;
   
   CreateSession: grpc.handleUnaryCall<_browser_proxy_v1_CreateSessionRequest__Output, _browser_proxy_v1_CreateSessionResponse>;
@@ -84,6 +97,7 @@ export interface BrowserProxyServiceHandlers extends grpc.UntypedServiceImplemen
 }
 
 export interface BrowserProxyServiceDefinition extends grpc.ServiceDefinition {
+  CaptureScreenshot: MethodDefinition<_browser_proxy_v1_CaptureScreenshotRequest, _browser_proxy_v1_CaptureScreenshotResponse, _browser_proxy_v1_CaptureScreenshotRequest__Output, _browser_proxy_v1_CaptureScreenshotResponse__Output>
   CloseSession: MethodDefinition<_browser_proxy_v1_CloseSessionRequest, _browser_proxy_v1_CloseSessionResponse, _browser_proxy_v1_CloseSessionRequest__Output, _browser_proxy_v1_CloseSessionResponse__Output>
   CreateSession: MethodDefinition<_browser_proxy_v1_CreateSessionRequest, _browser_proxy_v1_CreateSessionResponse, _browser_proxy_v1_CreateSessionRequest__Output, _browser_proxy_v1_CreateSessionResponse__Output>
   DownloadFile: MethodDefinition<_browser_proxy_v1_DownloadFileRequest, _browser_proxy_v1_DownloadFileResponse, _browser_proxy_v1_DownloadFileRequest__Output, _browser_proxy_v1_DownloadFileResponse__Output>

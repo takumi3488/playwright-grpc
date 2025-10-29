@@ -2,6 +2,8 @@ import type * as grpc from '@grpc/grpc-js';
 import type { MessageTypeDefinition } from '@grpc/proto-loader';
 
 import type { BrowserProxyServiceClient as _browser_proxy_v1_BrowserProxyServiceClient, BrowserProxyServiceDefinition as _browser_proxy_v1_BrowserProxyServiceDefinition } from './browser_proxy/v1/BrowserProxyService';
+import type { CaptureScreenshotRequest as _browser_proxy_v1_CaptureScreenshotRequest, CaptureScreenshotRequest__Output as _browser_proxy_v1_CaptureScreenshotRequest__Output } from './browser_proxy/v1/CaptureScreenshotRequest';
+import type { CaptureScreenshotResponse as _browser_proxy_v1_CaptureScreenshotResponse, CaptureScreenshotResponse__Output as _browser_proxy_v1_CaptureScreenshotResponse__Output } from './browser_proxy/v1/CaptureScreenshotResponse';
 import type { CloseSessionRequest as _browser_proxy_v1_CloseSessionRequest, CloseSessionRequest__Output as _browser_proxy_v1_CloseSessionRequest__Output } from './browser_proxy/v1/CloseSessionRequest';
 import type { CloseSessionResponse as _browser_proxy_v1_CloseSessionResponse, CloseSessionResponse__Output as _browser_proxy_v1_CloseSessionResponse__Output } from './browser_proxy/v1/CloseSessionResponse';
 import type { Cookie as _browser_proxy_v1_Cookie, Cookie__Output as _browser_proxy_v1_Cookie__Output } from './browser_proxy/v1/Cookie';
@@ -24,6 +26,8 @@ export interface ProtoGrpcType {
   browser_proxy: {
     v1: {
       BrowserProxyService: SubtypeConstructor<typeof grpc.Client, _browser_proxy_v1_BrowserProxyServiceClient> & { service: _browser_proxy_v1_BrowserProxyServiceDefinition }
+      CaptureScreenshotRequest: MessageTypeDefinition<_browser_proxy_v1_CaptureScreenshotRequest, _browser_proxy_v1_CaptureScreenshotRequest__Output>
+      CaptureScreenshotResponse: MessageTypeDefinition<_browser_proxy_v1_CaptureScreenshotResponse, _browser_proxy_v1_CaptureScreenshotResponse__Output>
       CloseSessionRequest: MessageTypeDefinition<_browser_proxy_v1_CloseSessionRequest, _browser_proxy_v1_CloseSessionRequest__Output>
       CloseSessionResponse: MessageTypeDefinition<_browser_proxy_v1_CloseSessionResponse, _browser_proxy_v1_CloseSessionResponse__Output>
       Cookie: MessageTypeDefinition<_browser_proxy_v1_Cookie, _browser_proxy_v1_Cookie__Output>

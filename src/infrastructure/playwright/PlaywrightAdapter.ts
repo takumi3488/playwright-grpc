@@ -11,6 +11,7 @@ import type {
 	Headers,
 	HttpResponse,
 	NavigationResult,
+	ScreenshotResult,
 } from "../../shared/types";
 
 /**
@@ -202,6 +203,73 @@ export class PlaywrightAdapter {
 			secure: cookie.secure,
 			sameSite: (cookie.sameSite as "Strict" | "Lax" | "None") || "None",
 		}));
+	}
+
+	/**
+	 * Captures a screenshot of the current page
+	 */
+	async captureScreenshot(
+		sessionId: string,
+		selector?: string,
+		fullPage?: boolean,
+	): Promise<ScreenshotResult> {
+		const contextData = this.contexts.get(sessionId);
+		if (!contextData) {
+			throw new Error(`Context not found for session: ${sessionId}`);
+		}
+
+		if (!contextData.page) {
+			throw new Error(
+				`No page found in session: ${sessionId}. Navigate to a page first.`,
+			);
+		}
+
+		try {
+			let screenshot: Buffer;
+			let width: number;
+			let height: number;
+
+			if (selector) {
+				// Capture specific element
+				const element = await contextData.page.locator(selector).first();
+				const box = await element.boundingBox();
+				if (!box) {
+					throw new Error(`Element not found or not visible: ${selector}`);
+				}
+				screenshot = await element.screenshot({ type: "png" });
+				width = Math.round(box.width);
+				height = Math.round(box.height);
+			} else {
+				// Capture full page or viewport
+				screenshot = await contextData.page.screenshot({
+					type: "png",
+					fullPage: fullPage ?? false,
+				});
+				const viewportSize = contextData.page.viewportSize();
+				if (fullPage) {
+					// For full page, get the actual page dimensions
+					const dimensions = await contextData.page.evaluate(() => ({
+						width: document.documentElement.scrollWidth,
+						height: document.documentElement.scrollHeight,
+					}));
+					width = dimensions.width;
+					height = dimensions.height;
+				} else {
+					width = viewportSize?.width ?? 0;
+					height = viewportSize?.height ?? 0;
+				}
+			}
+
+			return {
+				data: new Uint8Array(screenshot),
+				width,
+				height,
+			};
+		} catch (error) {
+			throw new Error(
+				`Failed to capture screenshot: ${error instanceof Error ? error.message : String(error)}`,
+			);
+		}
 	}
 
 	/**

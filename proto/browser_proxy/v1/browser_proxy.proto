@@ -21,6 +21,9 @@ service BrowserProxyService {
   // Retrieves cookies from the current session
   rpc GetCookies(GetCookiesRequest) returns (GetCookiesResponse);
 
+  // Captures a screenshot of the current page
+  rpc CaptureScreenshot(CaptureScreenshotRequest) returns (CaptureScreenshotResponse);
+
   // Closes and destroys a session
   rpc CloseSession(CloseSessionRequest) returns (CloseSessionResponse);
 }
@@ -106,4 +109,18 @@ message CloseSessionRequest {
 // Response for session closure
 message CloseSessionResponse {
   bool success = 1;
+}
+
+// Request to capture a screenshot
+message CaptureScreenshotRequest {
+  string session_id = 1; // Session identifier
+  optional string selector = 2; // Optional CSS selector to capture specific element
+  optional bool full_page = 3; // Capture full scrollable page (default: false)
+}
+
+// Response containing screenshot data
+message CaptureScreenshotResponse {
+  bytes data = 1; // PNG screenshot data
+  int32 width = 2; // Image width in pixels
+  int32 height = 3; // Image height in pixels
 }

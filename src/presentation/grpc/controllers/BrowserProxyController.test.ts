@@ -1,6 +1,7 @@
 import { describe, expect, it, mock } from "bun:test";
 import type * as grpc from "@grpc/grpc-js";
 import type {
+	CaptureScreenshotUseCase,
 	CloseSessionUseCase,
 	CreateSessionUseCase,
 	DownloadFileUseCase,
@@ -31,6 +32,7 @@ describe("BrowserProxyController", () => {
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
 				{} as GetCookiesUseCase,
+				{} as CaptureScreenshotUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -96,6 +98,7 @@ describe("BrowserProxyController", () => {
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
 				{} as GetCookiesUseCase,
+				{} as CaptureScreenshotUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -127,6 +130,7 @@ describe("BrowserProxyController", () => {
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
 				{} as GetCookiesUseCase,
+				{} as CaptureScreenshotUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -170,6 +174,7 @@ describe("BrowserProxyController", () => {
 				mockFetchHttpUseCase,
 				{} as DownloadFileUseCase,
 				{} as GetCookiesUseCase,
+				{} as CaptureScreenshotUseCase,
 				{} as CloseSessionUseCase,
 			);
 
@@ -209,6 +214,7 @@ describe("BrowserProxyController", () => {
 				{} as FetchHttpUseCase,
 				{} as DownloadFileUseCase,
 				{} as GetCookiesUseCase,
+				{} as CaptureScreenshotUseCase,
 				mockCloseSessionUseCase,
 			);
 

@@ -42,3 +42,12 @@ export interface Cookie {
 	secure: boolean;
 	sameSite: "Strict" | "Lax" | "None";
 }
+
+/**
+ * Screenshot capture result
+ */
+export interface ScreenshotResult {
+	data: Uint8Array; // PNG image data
+	width: number;
+	height: number;
+}

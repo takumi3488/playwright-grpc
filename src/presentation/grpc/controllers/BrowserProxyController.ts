@@ -1,5 +1,6 @@
 import * as grpc from "@grpc/grpc-js";
 import type {
+	CaptureScreenshotUseCase,
 	CloseSessionUseCase,
 	CreateSessionUseCase,
 	DownloadFileUseCase,
@@ -7,6 +8,8 @@ import type {
 	GetCookiesUseCase,
 	NavigatePageUseCase,
 } from "../../../application/usecases";
+import type { CaptureScreenshotRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CaptureScreenshotRequest";
+import type { CaptureScreenshotResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CaptureScreenshotResponse";
 import type { CloseSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionRequest";
 import type { CloseSessionResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionResponse";
 import type { CreateSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CreateSessionRequest";
@@ -32,6 +35,7 @@ export class BrowserProxyController {
 		private fetchHttpUseCase: FetchHttpUseCase,
 		private downloadFileUseCase: DownloadFileUseCase,
 		private getCookiesUseCase: GetCookiesUseCase,
+		private captureScreenshotUseCase: CaptureScreenshotUseCase,
 		private closeSessionUseCase: CloseSessionUseCase,
 	) {}
 
@@ -174,6 +178,36 @@ export class BrowserProxyController {
 					secure: cookie.secure,
 					sameSite: cookie.sameSite,
 				})),
+			});
+		} catch (error) {
+			callback(this.handleError(error), null);
+		}
+	};
+
+	/**
+	 * Captures a screenshot
+	 */
+	CaptureScreenshot: grpc.handleUnaryCall<
+		CaptureScreenshotRequest__Output,
+		CaptureScreenshotResponse
+	> = async (call, callback) => {
+		try {
+			const { sessionId, selector, fullPage } = call.request;
+
+			if (!sessionId) {
+				throw new Error("sessionId is required");
+			}
+
+			const result = await this.captureScreenshotUseCase.execute(
+				sessionId,
+				selector || undefined,
+				fullPage ?? false,
+			);
+
+			callback(null, {
+				data: result.data,
+				width: result.width,
+				height: result.height,
 			});
 		} catch (error) {
 			callback(this.handleError(error), null);
