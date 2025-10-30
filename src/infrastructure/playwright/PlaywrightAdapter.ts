@@ -119,10 +119,10 @@ export class PlaywrightAdapter {
 			// Execute fetch within the browser context
 			const result = await contextData.page.evaluate(
 				async ({ url, headers, credential }) => {
-					const fetchOptions: RequestInit = { headers };
-					if (credential) {
-						fetchOptions.credentials = credential as RequestCredentials;
-					}
+					const fetchOptions: RequestInit = {
+						headers,
+						credentials: (credential || "include") as RequestCredentials,
+					};
 					const response = await fetch(url, fetchOptions);
 					const body = await response.arrayBuffer();
 					const responseHeaders: Record<string, string> = {};
