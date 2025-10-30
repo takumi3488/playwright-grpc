@@ -4,9 +4,11 @@
 export interface NavigatePageResponse {
   'pageId'?: (string);
   'statusCode'?: (number);
+  'csrfToken'?: (string);
 }
 
 export interface NavigatePageResponse__Output {
   'pageId': (string);
   'statusCode': (number);
+  'csrfToken': (string);
 }

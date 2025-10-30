@@ -49,6 +49,7 @@ message NavigatePageRequest {
 message NavigatePageResponse {
   string page_id = 1; // Page identifier (one page per session)
   int32 status_code = 2; // Navigation response status code
+  string csrf_token = 3; // CSRF token extracted from the page
 }
 
 // Request to fetch HTTP content

@@ -120,6 +120,7 @@ describe("BrowserProxyController", () => {
 			expect(mockCallback).toHaveBeenCalledWith(null, {
 				pageId: "page-123",
 				statusCode: 200,
+				csrfToken: "",
 			});
 		});
 

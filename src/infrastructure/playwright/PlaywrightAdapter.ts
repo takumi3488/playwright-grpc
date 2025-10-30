@@ -89,15 +89,77 @@ export class PlaywrightAdapter {
 			const statusCode = response?.status() ?? 0;
 			const pageId = `${sessionId}-page`;
 
+			// Extract CSRF token from the page
+			const csrfToken = await this.extractCsrfToken(contextData.page);
+
 			return {
 				pageId,
 				statusCode,
+				csrfToken,
 			};
 		} catch (error) {
 			throw new NavigationError(
 				url,
 				error instanceof Error ? error.message : String(error),
 			);
+		}
+	}
+
+	/**
+	 * Extracts CSRF token from the page
+	 * Tries in order:
+	 * 1. meta[name="csrf-token"] content
+	 * 2. window.CSRF_TOKEN
+	 * 3. meta[id="metadata"] content JSON
+	 */
+	/**
+	 * Extracts CSRF token from the page
+	 * Tries in order:
+	 * 1. meta[name="csrf-token"] content
+	 * 2. window.CSRF_TOKEN
+	 * 3. meta[id="metadata"] content JSON
+	 */
+	private async extractCsrfToken(page: Page): Promise<string | undefined> {
+		try {
+			const csrfToken = await page.evaluate(() => {
+				// Try meta[name="csrf-token"]
+				const metaCsrf = document.querySelector<HTMLMetaElement>(
+					'meta[name="csrf-token"]',
+				);
+				if (metaCsrf?.content) {
+					return metaCsrf.content;
+				}
+
+				// Try window.CSRF_TOKEN
+				const globalWindow = window as typeof window & {
+					CSRF_TOKEN?: string;
+				};
+				if (typeof window !== "undefined" && globalWindow.CSRF_TOKEN) {
+					return globalWindow.CSRF_TOKEN;
+				}
+
+				// Try meta[id="metadata"]
+				const metaMetadata = document.querySelector<HTMLMetaElement>(
+					'meta[id="metadata"][name="metadata"]',
+				);
+				if (metaMetadata?.content) {
+					try {
+						const metadata = JSON.parse(metaMetadata.content);
+						if (metadata.csrfToken) {
+							return metadata.csrfToken;
+						}
+					} catch {
+						// Ignore JSON parse errors
+					}
+				}
+
+				return undefined;
+			});
+
+			return csrfToken;
+		} catch {
+			// Return undefined if extraction fails
+			return undefined;
 		}
 	}
 

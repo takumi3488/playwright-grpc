@@ -27,6 +27,7 @@ export interface HttpResponse {
 export interface NavigationResult {
 	pageId: string;
 	statusCode: number;
+	csrfToken?: string;
 }
 
 /**

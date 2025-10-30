@@ -79,6 +79,7 @@ export class BrowserProxyController {
 			callback(null, {
 				pageId: result.pageId,
 				statusCode: result.statusCode,
+				csrfToken: result.csrfToken ?? "",
 			});
 		} catch (error) {
 			callback(this.handleError(error), null);
