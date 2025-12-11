@@ -1,4 +1,5 @@
 import * as grpc from "@grpc/grpc-js";
+import { trace } from "@opentelemetry/api";
 import type {
 	CaptureScreenshotUseCase,
 	CloseSessionUseCase,
@@ -24,6 +25,8 @@ import type { NavigatePageRequest__Output } from "../../../infrastructure/grpc/g
 import type { NavigatePageResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/NavigatePageResponse";
 import { BaseError } from "../../../shared/errors";
 
+const tracer = trace.getTracer("browser-proxy-controller");
+
 /**
  * gRPC controller for BrowserProxyService
  * Implements the gRPC handlers and delegates to use cases
@@ -46,6 +49,7 @@ export class BrowserProxyController {
 		CreateSessionRequest__Output,
 		CreateSessionResponse
 	> = async (call, callback) => {
+		const span = tracer.startSpan("BrowserProxy.CreateSession");
 		try {
 			const { cookies, defaultHeaders } = call.request;
 
@@ -54,9 +58,14 @@ export class BrowserProxyController {
 				defaultHeaders ?? {},
 			);
 
+			span.setStatus({ code: 1 }); // OK
+			span.setAttribute("session.id", sessionId);
 			callback(null, { sessionId });
 		} catch (error) {
+			span.setStatus({ code: 2, message: String(error) }); // ERROR
 			callback(this.handleError(error), null);
+		} finally {
+			span.end();
 		}
 	};
 

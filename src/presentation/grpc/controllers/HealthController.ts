@@ -1,7 +1,10 @@
 import * as grpc from "@grpc/grpc-js";
+import { trace } from "@opentelemetry/api";
 import type { HealthCheckRequest__Output } from "../../../infrastructure/grpc/generated/grpc/health/v1/HealthCheckRequest";
 import type { HealthCheckResponse } from "../../../infrastructure/grpc/generated/grpc/health/v1/HealthCheckResponse";
 import { _grpc_health_v1_HealthCheckResponse_ServingStatus } from "../../../infrastructure/grpc/generated/grpc/health/v1/HealthCheckResponse";
+
+const tracer = trace.getTracer("health-controller");
 
 /**
  * gRPC controller for Health Check service
@@ -15,6 +18,7 @@ export class HealthController {
 	 */
 	Check: grpc.handleUnaryCall<HealthCheckRequest__Output, HealthCheckResponse> =
 		async (_call, callback) => {
+			const span = tracer.startSpan("health.Check");
 			try {
 				// For simplicity, we return SERVING for all services
 				// In a more complex application, you might check specific services
@@ -22,12 +26,16 @@ export class HealthController {
 					status: _grpc_health_v1_HealthCheckResponse_ServingStatus.SERVING,
 				};
 
+				span.setStatus({ code: 1 }); // OK
 				callback(null, response);
 			} catch (error) {
+				span.setStatus({ code: 2, message: String(error) }); // ERROR
 				callback({
 					code: grpc.status.INTERNAL,
 					message: error instanceof Error ? error.message : "Unknown error",
 				});
+			} finally {
+				span.end();
 			}
 		};
 

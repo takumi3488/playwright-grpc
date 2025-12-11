@@ -4,6 +4,7 @@ services:
     ports:
       - "16686:16686" # Jaeger UI
       - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
     environment:
       - COLLECTOR_OTLP_ENABLED=true
     healthcheck:
@@ -20,7 +21,8 @@ services:
     environment:
       - PORT=50051
       - HOST=0.0.0.0
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_LOG_LEVEL=debug
     depends_on:
       jaeger:
         condition: service_healthy

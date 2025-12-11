@@ -1,3 +1,4 @@
+import "./tracing";
 import { resolve } from "node:path";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
