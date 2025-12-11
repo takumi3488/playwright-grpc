@@ -21,7 +21,7 @@ services:
     environment:
       - PORT=50051
       - HOST=0.0.0.0
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
       - OTEL_LOG_LEVEL=debug
     depends_on:
       jaeger:
