@@ -9,7 +9,7 @@ describe("FetchHttpUseCase", () => {
 	it("should fetch HTTP content successfully", async () => {
 		const session = new Session(
 			"session-123",
-			{ cookie: "value" },
+			[],
 			{ "User-Agent": "test" },
 			"page-123",
 		);
@@ -73,11 +73,7 @@ describe("FetchHttpUseCase", () => {
 	});
 
 	it("should throw error if page is not initialized", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),

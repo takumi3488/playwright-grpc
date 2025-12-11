@@ -7,11 +7,7 @@ import { CaptureScreenshotUseCase } from "./CaptureScreenshotUseCase";
 
 describe("CaptureScreenshotUseCase", () => {
 	it("should capture screenshot successfully", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),
@@ -45,11 +41,7 @@ describe("CaptureScreenshotUseCase", () => {
 	});
 
 	it("should capture screenshot with selector", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),
@@ -82,11 +74,7 @@ describe("CaptureScreenshotUseCase", () => {
 	});
 
 	it("should capture full page screenshot", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),

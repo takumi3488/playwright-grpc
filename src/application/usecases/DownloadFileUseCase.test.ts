@@ -9,7 +9,7 @@ describe("DownloadFileUseCase", () => {
 	it("should download file and stream chunks", async () => {
 		const session = new Session(
 			"session-123",
-			{ cookie: "value" },
+			[],
 			{ "User-Agent": "test" },
 			"page-123",
 		);
@@ -79,11 +79,7 @@ describe("DownloadFileUseCase", () => {
 	});
 
 	it("should throw error if page is not initialized", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),

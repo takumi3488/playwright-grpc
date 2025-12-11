@@ -7,11 +7,7 @@ import { NavigatePageUseCase } from "./NavigatePageUseCase";
 
 describe("NavigatePageUseCase", () => {
 	it("should navigate to URL and update session", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),

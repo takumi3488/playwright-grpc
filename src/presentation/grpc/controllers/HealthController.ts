@@ -60,10 +60,10 @@ export class HealthController {
 			// and send updates when the health status changes
 			call.end();
 		} catch (error) {
-			call.destroy({
-				code: grpc.status.INTERNAL,
-				message: error instanceof Error ? error.message : "Unknown error",
-			});
+			const err = new Error(
+				error instanceof Error ? error.message : "Unknown error",
+			);
+			call.destroy(err);
 		}
 	};
 }

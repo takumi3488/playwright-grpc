@@ -7,11 +7,7 @@ import { CloseSessionUseCase } from "./CloseSessionUseCase";
 
 describe("CloseSessionUseCase", () => {
 	it("should close session successfully", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),
@@ -35,11 +31,7 @@ describe("CloseSessionUseCase", () => {
 	});
 
 	it("should return false if context close fails", async () => {
-		const session = new Session(
-			"session-123",
-			{ cookie: "value" },
-			{ "User-Agent": "test" },
-		);
+		const session = new Session("session-123", [], { "User-Agent": "test" });
 
 		const mockRepository: SessionRepository = {
 			findById: mock(async () => session),

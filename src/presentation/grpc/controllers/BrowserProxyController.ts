@@ -13,6 +13,7 @@ import type { CaptureScreenshotRequest__Output } from "../../../infrastructure/g
 import type { CaptureScreenshotResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CaptureScreenshotResponse";
 import type { CloseSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionRequest";
 import type { CloseSessionResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CloseSessionResponse";
+import type { Cookie__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/Cookie";
 import type { CreateSessionRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CreateSessionRequest";
 import type { CreateSessionResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/CreateSessionResponse";
 import type { DownloadFileRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/DownloadFileRequest";
@@ -24,8 +25,22 @@ import type { GetCookiesResponse } from "../../../infrastructure/grpc/generated/
 import type { NavigatePageRequest__Output } from "../../../infrastructure/grpc/generated/browser_proxy/v1/NavigatePageRequest";
 import type { NavigatePageResponse } from "../../../infrastructure/grpc/generated/browser_proxy/v1/NavigatePageResponse";
 import { BaseError } from "../../../shared/errors";
+import type { Cookie } from "../../../shared/types";
 
 const tracer = trace.getTracer("browser-proxy-controller");
+
+function _convertGrpcCookie(grpcCookie: Cookie__Output): Cookie {
+	return {
+		name: grpcCookie.name,
+		value: grpcCookie.value,
+		domain: grpcCookie.domain,
+		path: grpcCookie.path,
+		expires: grpcCookie.expires,
+		httpOnly: grpcCookie.httpOnly,
+		secure: grpcCookie.secure,
+		sameSite: grpcCookie.sameSite as "Strict" | "Lax" | "None",
+	};
+}
 
 /**
  * gRPC controller for BrowserProxyService
@@ -54,7 +69,7 @@ export class BrowserProxyController {
 			const { cookies, defaultHeaders } = call.request;
 
 			const sessionId = await this.createSessionUseCase.execute(
-				cookies ?? [],
+				(cookies ?? []).map(_convertGrpcCookie),
 				defaultHeaders ?? {},
 			);
 
