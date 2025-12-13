@@ -1,3 +1,4 @@
+import { trace } from "@opentelemetry/api";
 import type { BrowserContext, Page } from "playwright";
 import { chromium } from "playwright";
 import {
@@ -79,6 +80,23 @@ export class PlaywrightAdapter {
 		// Create page if it doesn't exist
 		if (!contextData.page) {
 			contextData.page = await contextData.context.newPage();
+
+			// Set up request failure event listener
+			contextData.page.on("requestfailed", (request) => {
+				const failureText = request.failure()?.errorText ?? "Unknown error";
+				console.error(
+					`[RequestFailed] URL: ${request.url()}, Reason: ${failureText}`,
+				);
+
+				// Add event to active span if available
+				const activeSpan = trace.getActiveSpan();
+				if (activeSpan) {
+					activeSpan.addEvent("request_failed", {
+						"request.url": request.url(),
+						"request.failure_reason": failureText,
+					});
+				}
+			});
 		}
 
 		try {
@@ -208,10 +226,10 @@ export class PlaywrightAdapter {
 				body: new Uint8Array(result.body),
 			};
 		} catch (error) {
-			throw new HttpFetchError(
-				url,
-				error instanceof Error ? error.message : String(error),
-			);
+			const errorMessage =
+				error instanceof Error ? error.message : String(error);
+			console.error(`[FetchHttp] Failed to fetch ${url}: ${errorMessage}`);
+			throw new HttpFetchError(url, errorMessage);
 		}
 	}
 

@@ -132,7 +132,7 @@ function startServer(server: grpc.Server): Promise<void> {
 async function shutdown(
 	server: grpc.Server,
 	playwrightAdapter: PlaywrightAdapter,
-	timeoutMs: number = 30000,
+	timeoutMs = 30000,
 ): Promise<void> {
 	console.log("\nShutting down gracefully...");
 
