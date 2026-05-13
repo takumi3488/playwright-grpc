@@ -1,5 +1,5 @@
 # Build stage
-FROM oven/bun:1.3@sha256:87416c977a612a204eb54ab9f3927023c2a3c971f4f345a01da08ea6262ae30e AS builder
+FROM oven/bun:1.3@sha256:e10577f0db68676a7024391c6e5cb4b879ebd17188ab750cf10024a6d700e5c4 AS builder
 WORKDIR /app
 
 # Copy package files
@@ -20,7 +20,7 @@ RUN bun run proto:generate
 COPY src /app/src
 
 # Runtime stage
-FROM oven/bun:1.3@sha256:87416c977a612a204eb54ab9f3927023c2a3c971f4f345a01da08ea6262ae30e
+FROM oven/bun:1.3@sha256:e10577f0db68676a7024391c6e5cb4b879ebd17188ab750cf10024a6d700e5c4
 WORKDIR /app
 
 # Install Playwright system dependencies and grpc-health-probe
