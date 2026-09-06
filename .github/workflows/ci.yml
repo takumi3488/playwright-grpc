@@ -9,16 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         
       - name: Run tests
-        uses: takumi3488/mygha/bun/test@12095312d7585ec94e3fbb4f1826a0bdbb404ee5 # main
+        uses: takumi3488/mygha/bun/test@6c9c9fe8d56c10dea277e8977b64385703fa7729 # main
 
   e2e-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up Go
         uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
@@ -30,7 +30,7 @@ jobs:
         run: go install github.com/grpc-ecosystem/grpc-health-probe@latest
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
 
       - name: Up Docker Compose services
         run: docker compose up -d --wait playwright-grpc
