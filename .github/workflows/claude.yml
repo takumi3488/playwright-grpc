@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Run Claude Code with S3 Backup
-        uses: takumi3488/mygha/cca@0c1c6db7145ad078080246e0b7177f9cc364fb2d # main
+        uses: takumi3488/mygha/cca@783b689de345c000a00dc72906f8503f261ee675 # main
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           mc-endpoint-url: ${{ secrets.MC_ENDPOINT_URL }}
