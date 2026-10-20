@@ -169,3 +169,8 @@ bun run lint
 # Auto-fix issues
 bun run lint:fix
 ```
+
+## Support
+
+If you find playwright-grpc useful, consider [sponsoring takumi3488](https://github.com/sponsors/takumi3488)
+to support its development and maintenance.
